@@ -8,7 +8,7 @@ env:
   EC2_HOST: ${{ secrets.EC2_HOST }}
   SRC_PATH: 'build/libs/*.jar'
   DEST_DIR: '/home/ubuntu'
-  APP_NAME: 'task-0.0.1-SNAPSHOT'
+  APP_NAME: 'sboot'
 jobs:
   build:
     runs-on: ubuntu-latest
