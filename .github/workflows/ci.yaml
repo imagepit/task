@@ -59,9 +59,10 @@ jobs:
             After = network.target
 
             [Service]
-            ExecStart =  /home/ubuntu/sboot/app.jar
-            Restart = always
             User = ${EC2_USER}
+            ExecStart = /usr/bin/java -jar /home/ubuntu/sboot/app.jar
+            SuccessExitStatus = 143
+            Restart = always
 
             [Install]
             WantedBy = multi-user.target
