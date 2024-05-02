@@ -44,8 +44,9 @@ jobs:
       - name: SSH EC2 Setup and Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
-          key: ${{ secrets.AWS_EC2_PRIVATE_KEY }}
-          username: ${{ env.EC2_USER }}
           host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USER }}
+          key: ${{ secrets.AWS_EC2_PRIVATE_KEY }}
+          envs: APP_NAME
           script: |
-            sudo systemctl restart ${APP_NAME}
+            sudo systemctl restart $APP_NAME
