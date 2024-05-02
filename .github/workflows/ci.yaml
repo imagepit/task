@@ -7,7 +7,7 @@ env:
   EC2_USER: 'ubuntu'
   EC2_HOST: ${{ secrets.EC2_HOST }}
   SRC_PATH: 'build/libs/*.jar'
-  DEST_DIR: '/var/apps'
+  DEST_DIR: '/home/ubuntu'
   APP_NAME: 'task-0.0.1-SNAPSHOT'
 jobs:
   build:
@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -t -o StrictHostKeyChecking=no -i private_key ${EC2_USER}@${EC2_HOST} "sudo mkdir -p $DEST_DIR/$APP_NAME && sudo chmod -R 777 $DEST_DIR/$APP_NAME"
-          scp -i private_key ${SRC_PATH} ${EC2_USER}@${EC2_HOST}:${DEST_DIR}/${APP_NAME}/${APP_NAME}.jar
+          scp -i private_key ${SRC_PATH} ${EC2_USER}@${EC2_HOST}:${DEST_DIR}/${APP_NAME}.jar
       - name: SSH EC2 Setup and Deploy
         uses: appleboy/ssh-action@v0.0.9
         with:
@@ -59,7 +59,7 @@ jobs:
             After = network.target
 
             [Service]
-            ExecStart =  ${DEST_DIR}/${APP_NAME}/${APP_NAME}.jar
+            ExecStart =  ${DEST_DIR}/${APP_NAME}.jar
             Restart = always
             User = ${EC2_USER}
 
