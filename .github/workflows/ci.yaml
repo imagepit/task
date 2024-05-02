@@ -8,7 +8,7 @@ env:
   EC2_HOST: ${{ secrets.EC2_HOST }}
   SRC_PATH: 'build/libs/*.jar'
   DEST_DIR: '/var/apps'
-  APP_NAME: 'spring-boot-app'
+  APP_NAME: 'task-0.0.1-SNAPSHOT'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -49,13 +49,13 @@ jobs:
           host: ${{ env.EC2_HOST }}
           script: |
             echo "===== check exist service file ====="
-            if [ -f /etc/systemd/system/${APP_NAME}.service ]; then
+            if [ -f /etc/systemd/system/sboot.service ]; then
             echo "already exist service file for $APP_NAME"
             else
             echo "create service file for $APP_NAME"
-            cat <<EOL | sudo tee -a  /etc/systemd/system/${APP_NAME}.service
+            cat <<EOL | sudo tee -a  /etc/systemd/system/sboot.service
             [Unit]
-            Description = ${APP_NAME} app
+            Description = spring boot app
             After = network.target
 
             [Service]
