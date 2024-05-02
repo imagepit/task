@@ -7,7 +7,7 @@ env:
   EC2_USER: 'ubuntu'
   EC2_HOST: ${{ secrets.EC2_HOST }}
   SRC_PATH: 'build/libs/*.jar'
-  DEST_DIR: '/home/ubuntu'
+  DEST_DIR: '/var/app'
   APP_NAME: 'sboot'
 
 
