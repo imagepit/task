@@ -48,32 +48,4 @@ jobs:
           username: ${{ env.EC2_USER }}
           host: ${{ env.EC2_HOST }}
           script: |
-            echo "===== check exist service file ====="
-            if [ -f /etc/systemd/system/sboot.service ]; then
-            echo "already exist service file for $APP_NAME"
-            else
-            echo "create service file for $APP_NAME"
-            cat <<EOL | sudo tee -a  /etc/systemd/system/sboot.service
-            [Unit]
-            Description = spring boot app
-            After = network.target
-
-            [Service]
-            User = ${EC2_USER}
-            ExecStart = /usr/bin/java -jar /home/ubuntu/sboot/app.jar
-            SuccessExitStatus = 143
-            Restart = always
-
-            [Install]
-            WantedBy = multi-user.target
-            EOL
-            fi
-            echo "===== application (re)start ====="
-            sudo systemctl daemon-reload
-            if sudo systemctl status ${APP_NAME} 2>&1 | grep "Active: active (running)" ; then
-              echo "${APP_NAME} app restart!!"
-              sudo systemctl restart ${APP_NAME}
-            else
-              echo "${APP_NAME} app start!!"
-              sudo systemctl start ${APP_NAME}
-            fi
+            sudo systemctl restart ${APP_NAME}
