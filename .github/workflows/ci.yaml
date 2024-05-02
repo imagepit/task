@@ -3,13 +3,13 @@ on:
   push:
     branches:
       - master
-
 env:
   EC2_USER: 'ubuntu'
   EC2_HOST: ${{ secrets.EC2_HOST }}
-  SRC_PATH: 'build/libs/demo-0.0.1-SNAPSHOT.jar'
-  DEST_DIR: '/home/ubuntu/sboot'
+  SRC_PATH: 'build/libs/*.jar'
+  DEST_DIR: '/home/ubuntu'
   APP_NAME: 'sboot'
+
 
 jobs:
   build:
@@ -45,17 +45,19 @@ jobs:
       with:
         name: build-artifact
         path: build/libs
-    - name: SCPを使ってEC2にファイルを転送
+    - name: Deploy to EC2 by SCP
       env:
         PRIVATE_KEY: ${{ secrets.AWS_EC2_PRIVATE_KEY }}
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        scp -i private_key build/libs/task-0.0.1-SNAPSHOT.jar ${EC2_USER}@${EC2_HOST}:${DEST_DIR}/app.jar
-    - name: SSHを使ってEC2にデプロイ
+        ssh -t -o StrictHostKeyChecking=no -i private_key ${EC2_USER}@${EC2_HOST} "sudo mkdir -p /home/ubuntu/sboot && sudo chmod -R 777 /home/ubuntu/sboot"
+        scp -i private_key build/libs/task-0.0.1-SNAPSHOT.jar ${EC2_USER}@${EC2_HOST}:/home/ubuntu/sboot/app.jar
+    - name: SSH EC2 Setup and Deploy
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ env.EC2_HOST }}
         username: ${{ env.EC2_USER }}
         key: ${{ secrets.AWS_EC2_PRIVATE_KEY }}
         envs: APP_NAME
-        script: sudo systemctl restart $APP_NAME
+        script: |
+          sudo systemctl restart $APP_NAME
