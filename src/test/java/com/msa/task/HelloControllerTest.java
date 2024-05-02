@@ -17,6 +17,6 @@ public class HelloControllerTest {
 
   @Test
   public void testHello() {
-    assertThat(helloController.hello()).isEqualTo("aaaaa");
+    assertThat(helloController.hello()).isEqualTo("bbbbb");
   }
 }
